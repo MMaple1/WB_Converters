@@ -1,0 +1,19 @@
+name: tests
+on: [push, pull_request]
+jobs:
+  test:
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        python: ["3.8", "3.12"]
+        tool: [Modded_to_WB_1.5, WB_1.5_to_Modded]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Unit tests
+        working-directory: ${{ matrix.tool }}
+        run: python -B -m unittest discover -s tests -v
+      - name: Both converters share an identical core
+        run: python -c "import filecmp,sys; sys.exit(0 if filecmp.cmp('Modded_to_WB_1.5/core/wbconv.py','WB_1.5_to_Modded/core/wbconv.py',shallow=False) else 1)"

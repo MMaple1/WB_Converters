@@ -1,0 +1,17 @@
+# Python
+__pycache__/
+*.py[cod]
+
+# Your mods and converted output stay local (keep the .gitkeep placeholders)
+*/input/*
+!*/input/.gitkeep
+*/output/*
+!*/output/.gitkeep
+
+# System and editor files
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+*.log
