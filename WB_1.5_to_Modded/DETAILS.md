@@ -132,7 +132,7 @@ Note: With `-d DEST` and `-t both`, exports are written to `DEST/Deeproom_Mods` 
 
 `python -m unittest discover -s tests` runs the tests.
 
-The conversion core is `core/wbconv.py`. **Four identical copies exist** (both converters, the WB Mobile Patcher's `wbp/wbconv.py` and the Custom Studio's `backend/wbconv.py`): edit the one in `Modded_to_WB_1.5_Converter_v1.1/core/` and run the patcher's `python tools/sync_wbconv.py` (`--check` only reports).
+The conversion core is `core/wbconv.py`. It is identical in both converters (the repository's test run checks this) and in the WB Mobile Patcher (`wbp/wbconv.py`). Edit `Modded_to_WB_1.5/core/wbconv.py`; with the patcher checked out next to this repository, `python tools/sync_wbconv.py` in the patcher copies it everywhere (`--check` only reports).
 
 ---
 
