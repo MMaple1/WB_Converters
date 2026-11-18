@@ -7,6 +7,7 @@ All notable changes to the **WB 1.5 to Modded Mod Converter** tool are documente
 ## [Version 1.2.1] - 2026-11-17
 
 ### Fixes
+- **ModRoom partner portraits no longer distorted.** ModRoom draws partner portraits with the 17-frame modern layout only. A v1.5 partner's 10-frame `custom_portrait.png` used to be kept as it was (ModRoom then cut it into 17 wrong frames); it is now laid out as `custom_wife_portrait_0.png` with the frames Deeproom 4.0.3 draws for each layer (face, bangs, chest layer), the modern eye and blush frames left blank. Nothing is dropped, so no `--approximate` is needed.
 - **Deeproom partners' deepthroat drawn too high.** Converting a partner for Deeproom added `[deepthroat] origin_y="150"` (v1.5's default) when the pack had no deepthroat height, so Deeproom drew the sprite 66 px above the `[sprite]` origin its own packs use; a real v1.5 `deepthroat_origin_y` was copied unchanged, 70 px too high (Deeproom draws partner deepthroat 70 px higher than v1.5). Now no block is written without a v1.5 value, and a v1.5 value becomes Deeproom's value minus 70.
 - **`--repair-deepthroat <custom_wives folder>`** (or drag that folder onto `Convert_from_WB_1.5.bat`) fixes partners converted with an earlier version: blocks in exactly the old converter's shape are removed or corrected, everything else is left alone, dry run first, originals backed up to a zip.
 

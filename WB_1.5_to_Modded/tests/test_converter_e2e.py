@@ -80,7 +80,8 @@ class V15ToModded(unittest.TestCase):
             self.assertIn("custom_data.wife", names)
             self.assertNotIn("custom_data.spouse", names)
             self.assertFalse({"custom_mating_press.png", "custom_xray.png"} & names)
-            self.assertIn("custom_portrait.png", names)   # ModRoom reads a 10-frame portrait natively: kept as authored
+            self.assertNotIn("custom_portrait.png", names)   # ModRoom draws partner portraits as 17 modern frames only
+            self.assertEqual(W.png_size(out / "custom_wife_portrait_0.png")[0], 17 * 128)
             self.assertEqual(W.modroom_missing(out, "wife"), [])
 
     def test_modroom_aliases_a_missing_forward_cowgirl_instead_of_skipping(self):

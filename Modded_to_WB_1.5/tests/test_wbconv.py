@@ -200,11 +200,26 @@ class PackTests(unittest.TestCase):
             self.assertEqual(frames_of(d / "custom_wife_cowgirl_0.png"), 11)
             self.assertEqual(frames_of(d / "custom_wife_xray_0.png"), 4)              # .spouse pack: X-ray renamed, frames untouched
             self.assertEqual(first_pixel_red(d / "custom_wife_mating_press_0.png", 3), 40)
-            self.assertTrue((d / "custom_portrait.png").exists())                     # ModRoom reads a 10-frame portrait natively: kept as authored
+            self.assertFalse((d / "custom_portrait.png").exists())                    # ModRoom draws partner portraits as 17 modern frames only
+            self.assertEqual(frames_of(d / "custom_wife_portrait_0.png", 128), 17)  # re-laid out (wife_portrait_std_to_modern)
             self.assertTrue((d / "custom_data.wife").exists())
             self.assertFalse((d / "custom_data.spouse").exists())
             self.assertIn(r.status, ("partial", "padded"))
             self.assertEqual(W.modroom_missing(d, "wife"), [])
+
+    def test_wife_portrait_std_to_modern_layout(self):
+        src = strip(10, 8)                                   # frame i has red 10*i+10
+        out = W.wife_portrait_std_to_modern(src, 8)
+        self.assertEqual(out.width, 17 * 8)
+        reds = [out.rows[0][i * 8 * 4] for i in range(17)]
+        # 0-5 as they are, bangs 6, eyes 7-11 blank, layer 12 = 8, front bangs 13 = 9, blush 14-16 blank
+        self.assertEqual(reds, [10, 20, 30, 40, 50, 60, 70, 0, 0, 0, 0, 0, 90, 100, 0, 0, 0])
+        empty = W.Image(src.width, src.height, [bytearray(r) for r in src.rows])
+        for r in empty.rows:                                 # frames 6 and 9 empty: bangs fall back to frame 7
+            r[6 * 32:7 * 32] = bytes(32)
+            r[9 * 32:10 * 32] = bytes(32)
+        reds = [W.wife_portrait_std_to_modern(empty, 8).rows[0][i * 32] for i in (6, 13)]
+        self.assertEqual(reds, [80, 80])
 
     def test_v15_wife_xray_crop_needs_approximate(self):
         with tempfile.TemporaryDirectory() as tmp:

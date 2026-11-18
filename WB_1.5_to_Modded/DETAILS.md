@@ -41,8 +41,9 @@ Standard names and **one descriptor** per pack (`custom_data.futa` / `custom_dat
 - **Lovers**: Keep their standard names (ModRoom reads them natively) with one `custom_data.futa`; `[sprite] xray_offset_y` is added.
 - **Partners**: Get `custom_wife_*_0.png` strips and **one** `custom_data.wife`:
   - Mating press (4 to 5), reverse cowgirl (5 to 10), forward cowgirl (6 to 11) are **padded** with transparent frames (nothing dropped; the added frames are blank, so an animation can briefly show an empty frame).
-  - The X-ray (4 to 3) is **not** converted by default and the 10-frame portrait is kept as it is (ModRoom reads it natively): the X-ray crop drops a frame (hybrid packs show the standard 4th frame equal to the modern 3rd) and the portrait is a layered face strip.
-  - `--approximate` also pads the portrait to 17 frames and crops the X-ray (first 3 frames kept), but the X-ray only for packs that already have a `custom_data.wife`; a v1.5 `.spouse` pack keeps its X-ray as authored, renamed to `custom_wife_xray_0.png` with its 4 frames.
+  - The 10-frame portrait is laid out as the 17-frame modern portrait `custom_wife_portrait_0.png` (ModRoom draws partner portraits with that layout only): frames 0-5 as they are (the standard face frames already hold eyes and mouth), bangs 6 (7 if 6 is empty), layer 12 = frame 8, front bangs 13 = frame 9 (7 if 9 is empty), eye and blush frames blank. Nothing is dropped.
+  - The X-ray (4 to 3) is **not** converted by default: the crop drops a frame (hybrid packs show the standard 4th frame equal to the modern 3rd).
+  - `--approximate` also crops the X-ray (first 3 frames kept), but the X-ray only for packs that already have a `custom_data.wife`; a v1.5 `.spouse` pack keeps its X-ray as authored, renamed to `custom_wife_xray_0.png` with its 4 frames.
   - The standard-named strips are removed from the pack.
 - **ModRoom's Own Rules**: ModRoom lists a pack only if it has the sprites it draws, otherwise it crashes.
   - A lover needs portrait, mating press, cowgirl, and X-ray.
@@ -71,7 +72,7 @@ A strip whose width is not a whole number of frames is left alone and reported.
 - **Real-Time Visual Progress Bar**: Displays dynamic percentage and current character pack name during batch conversions so the terminal never appears stalled.
 - **Interactive Approximate Gating**: Lossy frame reduction is gated behind an interactive `[y/N]` prompt (defaulting safely to No) and `--no-approximate` / `--approximate` CLI flags.
 - **Reverse Cowgirl Fallback Aliasing & Padding**: v1.5 partner packs with only `custom_reverse_cowgirl.png` (81% of v1.5 partners) automatically alias and pad to 11 frames as `custom_wife_cowgirl_0.png` for ModRoom v3.3.
-- **Non-Destructive Portrait Preservation**: ModRoom v3.3 natively reads 10-frame portraits via `legacy_custom_portrait`; 10-frame portraits are kept intact instead of unlinked.
+- **Portrait layout**: ModRoom v3.3 reads 10-frame portraits natively only for lovers (`legacy_custom_portrait`); a partner's 10-frame portrait is re-laid out as the 17-frame modern one (see above). A portrait that cannot be (odd width) is kept as it is.
 - **Guaranteed Output Directory Creation**: Destination category directories (`custom_futas`, `custom_wives`, `custom_bedrooms`) and their `_manifest.txt` indexes are guaranteed to be created.
 - **Steam Workshop names**: numeric folders (for example `3821177370`) are named from the pack's `[info] name`.
 - **Loose portrait mapping**: a single unnumbered `*portrait*.png` becomes `custom_portrait.png` when a pack has none.
