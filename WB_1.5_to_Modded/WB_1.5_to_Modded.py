@@ -623,6 +623,48 @@ def convert_15_to_modroom(sources: Union[Path, List[Path]], dest_dir: Path, targ
     stats["report"] = report
     return stats
 
+def repair_deepthroat(folders, apply=None, interactive=False) -> int:
+    """Fix the [deepthroat] block older converters wrote into Deeproom partners (see wbconv.repair_deepthroat_bytes).
+
+    Lists what would change in each folder, then applies it when apply is True, or after a yes when apply is None
+    and interactive. Originals go to <folder>_deepthroat_backup_<time>.zip. Returns the exit code."""
+    if not folders:
+        print('[!] Give the Deeproom custom_wives folder, e.g. --repair-deepthroat "<game>/custom_stuff/custom_wives"')
+        return 1
+    rc = 0
+    for f in folders:
+        root = Path(f)
+        if not root.is_dir():
+            print(f"[!] Not a folder: {root}")
+            rc = 1
+            continue
+        print(f"\n[*] Deepthroat repair: {root}")
+        try:
+            found = wbconv.repair_deepthroat_folder(root)
+        except OSError as e:
+            print(f"[!] {e}")
+            rc = 1
+            continue
+        if not found:
+            print("    Nothing to fix.")
+            continue
+        for p in found:
+            print(f"    {p.relative_to(root)}")
+        print(f"    {len(found)} partner(s) need the fix.")
+        go = apply
+        if go is None and interactive:
+            try:
+                go = input("Apply these fixes (originals are backed up)? [y/N]: ").strip().lower().startswith("y")
+            except Exception:
+                go = False
+        if go:
+            if wbconv.repair_deepthroat_main([str(root), "--apply"]) != 0:
+                rc = 1
+        else:
+            print("    Nothing written. Answer y, or run with -y, to apply.")
+    return rc
+
+
 def main():
     if sys.version_info < (3, 8):
         print("[!] Error: Python 3.8 or higher is required. Please update Python.")
@@ -641,6 +683,7 @@ def main():
     parser.add_argument("-y", "--yes", action="store_true", help="Non-interactive execution (accept defaults).")
     parser.add_argument("--quarantine-duplicates", action="store_true", default=None, help="Automatically detect and quarantine duplicate custom character/room folders (default: True)")
     parser.add_argument("--no-quarantine-duplicates", action="store_true", default=None, help="Disable duplicate custom folder quarantine")
+    parser.add_argument("--repair-deepthroat", action="store_true", help="Instead of converting, fix Deeproom partners converted by a version older than 2026-11-17 (deepthroat drawn too high). Inputs are Deeproom custom_wives folders. Lists first and asks; -y applies, --dry-run only lists. Originals go to a backup zip next to the folder.")
 
     args = parser.parse_args()
 
@@ -648,8 +691,17 @@ def main():
     input_dir = tool_dir / "input"
 
     print("=" * 70)
-    print("      WB 1.5 TO MODDED CONVERTER v1.2")
+    print("      WB 1.5 TO MODDED CONVERTER v1.2.1")
     print("=" * 70)
+
+    interactive = not args.yes and bool(sys.stdin) and sys.stdin.isatty()
+    if args.repair_deepthroat:
+        sys.exit(repair_deepthroat(args.inputs, apply=False if args.dry_run else (True if args.yes else None), interactive=interactive))
+    # A Deeproom custom_wives/custom_stuff folder dropped on the launcher is not v1.5 input: offer the repair instead.
+    game_dirs = [p for p in args.inputs if Path(p).is_dir() and Path(p).name.lower() in ("custom_wives", "custom_stuff")]
+    if interactive and game_dirs and len(game_dirs) == len(args.inputs) and any(wbconv.repair_deepthroat_folder(Path(p)) for p in game_dirs):
+        print("[*] This is a Deeproom game folder, not a v1.5 mod. Checking its partners for the old deepthroat height.")
+        sys.exit(repair_deepthroat(game_dirs, apply=None, interactive=True))
 
     source_paths = []
     if args.inputs:

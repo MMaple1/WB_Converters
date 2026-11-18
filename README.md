@@ -9,7 +9,7 @@ Two converters that move character and room mods between Wife's Bedroom v1.5 and
 
 Drag a mod folder or `.zip` onto the `.bat`, press Enter at each question, and copy what appears in that converter's `output/` folder into your game. Each folder's `README.md` has the details.
 
-**Partners sitting too high in Deeproom's deepthroat pose?** Packs converted for Deeproom before 2026-11-17 can carry a wrong height. Drag your Deeproom `custom_stuff/custom_wives` folder onto `WB_1.5_to_Modded/Repair_Deepthroat.bat`. It lists what it would fix, asks first, and backs up the originals.
+**Partners sitting too high in Deeproom's deepthroat pose?** Packs converted for Deeproom before 2026-11-17 can carry a wrong height. Drag your Deeproom `custom_stuff/custom_wives` folder onto `WB_1.5_to_Modded/Convert_from_WB_1.5.bat` (or run `WB_1.5_to_Modded.py --repair-deepthroat "<folder>"`). It lists what it would fix, asks first, and backs up the originals.
 
 Running the tests: `python -m unittest discover -s tests` inside either folder. Changes: `CHANGELOG.md`.
 

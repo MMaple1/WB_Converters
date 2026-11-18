@@ -59,6 +59,7 @@ A strip whose width is not a whole number of frames is left alone and reported.
 - **Staging.** Packs are converted in a temporary folder; the destination is only touched once at least one pack was produced. `--clean` removes the old category folders at that point, not before.
 - **No overwriting, no piling up of copies.** Running the converter again into the same folder skips packs that are already there unchanged. A pack with the same name but different content is added next to the old one with the tag that tells them apart (or `_2` as a last resort).
 - **`--dry-run`** writes only the report.
+- **`--repair-deepthroat`** fixes partners converted for Deeproom by a version older than 2026-11-17 (deepthroat drawn 66-70 px too high). Give it Deeproom `custom_wives` folders, or drag such a folder onto `Convert_from_WB_1.5.bat`. It lists the partners first and asks; `-y` applies without asking and `--dry-run` only lists. Only `[deepthroat]` blocks in exactly the old converter's shape are changed, and the originals go to `<folder>_deepthroat_backup_<time>.zip` next to the folder.
 - **Zip files** are checked for paths that would write outside the temporary folder; an unsafe archive is skipped, and temporary folders are removed even after an error.
 - **Duplicates** are skipped and listed in the report; nothing is copied into a `!duplicates` folder.
 - **Duplicate Quarantine Category Isolation**: `custom_futas` (Lovers/Tops) and `custom_wives` (Partners/Bottoms) are strictly isolated and never match as duplicates. Bypasses generic placeholder names (`"example"`, `"partner"`, `"wife"`) in Tier 1 duplicate clustering.
@@ -95,8 +96,11 @@ The conversion report `output/conversion_report.md` details outcomes per pack an
 usage: WB_1.5_to_Modded.py [-h] [-t {deeproom,modroom,both}] [-d DEST]
                            [--clean] [--approximate] [--no-approximate]
                            [--dry-run] [-y] [--quarantine-duplicates]
-                           [--no-quarantine-duplicates]
+                           [--no-quarantine-duplicates] [--repair-deepthroat]
                            [inputs ...]
+
+WB 1.5 to Modded Converter: Convert v1.5 custom mods into Deeproom 4.0 or
+ModRoom 1.4 architecture
 
 positional arguments:
   inputs                Path(s) to v1.5 mod folders, custom/ directory,
@@ -122,6 +126,12 @@ options:
                         character/room folders (default: True)
   --no-quarantine-duplicates
                         Disable duplicate custom folder quarantine
+  --repair-deepthroat   Instead of converting, fix Deeproom partners converted
+                        by a version older than 2026-11-17 (deepthroat drawn
+                        too high). Inputs are Deeproom custom_wives folders.
+                        Lists first and asks; -y applies, --dry-run only
+                        lists. Originals go to a backup zip next to the
+                        folder.
 ```
 
 Note: With `-d DEST` and `-t both`, exports are written to `DEST/Deeproom_Mods` and `DEST/ModRoom_Mods`.

@@ -135,5 +135,55 @@ class RepairFolder(unittest.TestCase):
             self.assertEqual(len(list(Path(tmp).glob("custom_wives_deepthroat_backup_*.zip"))), 1)
 
 
+class ConverterOption(unittest.TestCase):
+    """The repair is the converter's --repair-deepthroat option (WB_1.5_to_Modded.py)."""
+    TOOL = Path(__file__).resolve().parent.parent / "WB_1.5_to_Modded.py"
+
+    @classmethod
+    def setUpClass(cls):
+        import importlib.util
+        spec = importlib.util.spec_from_file_location("v15_to_modded", cls.TOOL)
+        cls.CONV = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(cls.CONV)
+
+    def wives(self, tmp):
+        root = Path(tmp) / "custom_wives"
+        (root / "a").mkdir(parents=True)
+        (root / "a" / "custom_data.spouse").write_bytes(INVENTED)
+        return root
+
+    def test_function_lists_asks_and_applies(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = self.wives(tmp)
+            self.assertEqual(self.CONV.repair_deepthroat([root], apply=False), 0)
+            self.assertEqual(self.CONV.repair_deepthroat([root], apply=None, interactive=False), 0)
+            self.assertEqual((root / "a" / "custom_data.spouse").read_bytes(), INVENTED)
+            self.assertEqual(self.CONV.repair_deepthroat([root], apply=True), 0)
+            self.assertNotIn(b"deepthroat", (root / "a" / "custom_data.spouse").read_bytes())
+            self.assertEqual(len(list(Path(tmp).glob("custom_wives_deepthroat_backup_*.zip"))), 1)
+            self.assertEqual(self.CONV.repair_deepthroat([root], apply=True), 0)  # nothing left: no second backup
+            self.assertEqual(len(list(Path(tmp).glob("custom_wives_deepthroat_backup_*.zip"))), 1)
+
+    def test_function_errors(self):
+        self.assertEqual(self.CONV.repair_deepthroat([]), 1)
+        with tempfile.TemporaryDirectory() as tmp:
+            self.assertEqual(self.CONV.repair_deepthroat([Path(tmp) / "missing"], apply=True), 1)
+
+    def test_command_line(self):
+        import os, subprocess
+        env = dict(os.environ, PYTHONDONTWRITEBYTECODE="1")
+        with tempfile.TemporaryDirectory() as tmp:
+            root = self.wives(tmp)
+
+            def run(*extra):
+                return subprocess.run([sys.executable, str(self.TOOL), "--repair-deepthroat", str(root), *extra],
+                                      stdin=subprocess.DEVNULL, capture_output=True, env=env).returncode
+            self.assertEqual(run("--dry-run"), 0)
+            self.assertEqual(run(), 0)  # no console to ask on: lists only
+            self.assertEqual((root / "a" / "custom_data.spouse").read_bytes(), INVENTED)
+            self.assertEqual(run("-y"), 0)
+            self.assertNotIn(b"deepthroat", (root / "a" / "custom_data.spouse").read_bytes())
+
+
 if __name__ == "__main__":
     unittest.main()
