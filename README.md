@@ -2,6 +2,24 @@
 
 Two converters that move character and room mods between Wife's Bedroom v1.5 and the modded games (Deeproom 4.0.3 Kiwami, ModRoom v3.3). Each folder works on its own; you only need Python (free from python.org; tick "Add Python to PATH" when installing).
 
+## Features
+
+- Converts character and room packs both ways: Wife's Bedroom v1.5 to and from ModRoom v3.3 / Deeproom 4.0.3.
+- Drag and drop a folder or `.zip`; press Enter for the defaults.
+- Renames files, rewrites the pack settings and adjusts sprite strips to what the target game expects.
+- Skips duplicates and lists anything it could not convert, with the reason.
+- Never changes your original files.
+
+## What's new in v1.2 (since v1.1)
+
+- **Both converters in one place**, sharing one tested conversion core.
+- **Sprites fit the target game:** strips are padded or re-laid out to the frame counts it uses (ModRoom partner portraits included), so nothing looks cut or shifted.
+- **Safer runs:** packs are converted in a temporary folder first, existing packs are never overwritten, and `--dry-run` shows what would happen.
+- **No more `_2` copies** when you convert the same pack again.
+- **Deeproom deepthroat height fixed**, plus a repair for packs converted with older versions.
+
+Full list: `CHANGELOG.md`. Technical details: each converter's `DETAILS.md` and `core/CHANGELOG.md`.
+
 | You have mods for... | You want to play them in... | Use |
 |---|---|---|
 | ModRoom, Deeproom or FutasRoom | Wife's Bedroom v1.5 | `Modded_to_WB_1.5/Convert_to_WB_1.5.bat` |
