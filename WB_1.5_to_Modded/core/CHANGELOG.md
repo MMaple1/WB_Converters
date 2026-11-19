@@ -4,7 +4,7 @@ All notable changes to the **WB 1.5 to Modded Mod Converter** tool are documente
 
 ---
 
-## [Version 1.2.1] - 2026-11-17
+## [Version 1.2.1] - 2026-11-18
 
 ### Fixes
 - **ModRoom partner portraits no longer distorted.** ModRoom draws partner portraits with the 17-frame modern layout only. A v1.5 partner's 10-frame `custom_portrait.png` used to be kept as it was (ModRoom then cut it into 17 wrong frames); it is now laid out as `custom_wife_portrait_0.png` with the frames Deeproom 4.0.3 draws for each layer (face, bangs, chest layer), the modern eye and blush frames left blank. Nothing is dropped, so no `--approximate` is needed.
