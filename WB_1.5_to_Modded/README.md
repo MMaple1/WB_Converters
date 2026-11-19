@@ -9,7 +9,7 @@ This converter takes character and room mods made for Wife's Bedroom v1.5 and tu
 3. A command window opens. Press Enter for each question to accept the defaults.
 4. When finished, press any key to close the window. Converted mods will be in the `output/` folder next to the `.bat` file.
 
-Copy the contents of `output/Deeproom_Mods/custom_stuff/` into your Deeproom game directory, or `output/ModRoom_Mods/` into your ModRoom game directory.
+Copy `output/Deeproom_Mods/custom_stuff/` into your Deeproom game directory (merge it with the `custom_stuff/` there), or the contents of `output/ModRoom_Mods/` into your ModRoom game directory.
 
 **Troubleshooting:** Open `output/conversion_report.md` in any text editor. It lists every character and notes whether it was converted, padded, approximated, or skipped. A line saying *skipped* means that character was excluded intentionally, with the reason beside it. If the window closes too fast, open Command Prompt in this folder and run `python WB_1.5_to_Modded.py`.
 
