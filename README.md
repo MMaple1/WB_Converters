@@ -26,8 +26,6 @@ Two converters that move character and room mods between **Wife's Bedroom v1.5**
 - **Duplicates handled.** The same character is converted once, and the other copies are listed in the report. Converting again doesn't leave `_2` copies.
 - **Safer runs.** Packs are staged in a temporary folder, existing packs are never overwritten, a broken image or odd file name doesn't stop the run, and `--dry-run` shows what would happen.
 - **A report for every run**: `output/conversion_report.md`.
-- **Deeproom deepthroat height fixed**, plus a repair for packs converted with older versions (see below).
-- **Python only.** Pillow is no longer needed.
 
 Full list: `CHANGELOG.md`. Technical details: each converter's `DETAILS.md` and `core/CHANGELOG.md`.
 
